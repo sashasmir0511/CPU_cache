@@ -1,3 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    17:46:54 04/09/2021 
+-- Design Name: 
+-- Module Name:    memTeg - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_arith.ALL;
@@ -19,6 +38,7 @@ entity tegMem is
 		wr				: in  std_logic;
 		lfu				: in  std_logic;
 		
+		tegOut			: out std_logic_vector(ATEG_WIDTH +1 -1 downto 0);
 		chan   			: out std_logic_vector(CHANNEL_WIDTH - 1 downto 0);
 		hit				: out std_logic
 	);
@@ -89,15 +109,15 @@ begin
 				LFU_WIDTH		=> LFU_WIDTH)
 			port map (
 				clk				=> clk,		
-				reset_n 		=> reset_n,
-				addr 			=> addr,
+				reset_n 			=> reset_n,
+				addr 				=> addr,
 				wr 				=> wr,
 				lfu_ce 			=> lfuCh_u(i),
-				lfu 			=> lfu,
+				lfu 				=> lfu,
 				lfu_of 			=> chlfu_of(i),
 				lfu_s 			=> lfuShift,
 				tegOut 			=> chTegOut(i),
-				hit 			=> chHit(i)
+				hit 				=> chHit(i)
 			);
 			
 		lfuAllCnt((LFU_WIDTH+1) * (i + 1) - 1 downto (LFU_WIDTH+1) * i) <= 
@@ -125,10 +145,10 @@ begin
 			);
 
 	lfuShift	<= '1' when chlfu_of /= (chlfu_of'range => '0') else '0';
-	hitAll		<= '1' when chHit /= (chHit'range => '0') else '0';
+	hitAll	<= '1' when chHit /= (chHit'range => '0') else '0';
 	chan		<= hitCh when hitAll = '1' else lfuCh;
 	hit 		<= hitAll;
-	tegOut		<= 	chTegOut(conv_integer(lfuCh))(LFU_WIDTH) & 
-					chTegOut(conv_integer(lfuCh))(ATEG_WIDTH + 1 + LFU_WIDTH - 1 downto 1 + LFU_WIDTH);
+	tegOut	<= chTegOut(conv_integer(lfuCh))(LFU_WIDTH) & chTegOut(conv_integer(lfuCh))(ATEG_WIDTH + 1 + LFU_WIDTH - 1 downto 1 + LFU_WIDTH);
 
 end tegMem_arch;
+

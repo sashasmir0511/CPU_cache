@@ -1,3 +1,22 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    17:49:28 04/09/2021 
+-- Design Name: 
+-- Module Name:    memTegChannel - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.std_logic_unsigned.all;
@@ -20,9 +39,9 @@ entity tegMemChannel is
 		lfu_ce			: in  std_logic;
 		lfu_s			: in  std_logic;
 		
-		tegOut			: out std_logic_vector(ATEG_WIDTH + 2 + LFU_WIDTH - 1 downto 0);
+		tegOut			: out std_logic_vector(ATEG_WIDTH + 1 + LFU_WIDTH - 1 downto 0);
 		hit				: out std_logic;
-		lfu_of			: out std_logic;
+		lfu_of			: out std_logic
 	);
 	
 end tegMemChannel;
@@ -32,11 +51,11 @@ architecture tegMemChannel_arch of tegMemChannel is
 	constant MEM_SIZE	: integer := 2**AINDEX_WIDTH;
 	constant MEM_WIDTH  : integer := LFU_WIDTH + ATEG_WIDTH + 1;
 	constant VAL_BIT	: integer := LFU_WIDTH;
-	
-	alias aTeg			: std_logic_vector(ATEG_WIDTH - 1 downto 0) 
-											is addr(ATEG_WIDTH + AINDEX_WIDTH - 1 downto AINDEX_WIDTH);
-	alias aIndex		: std_logic_vector(AINDEX_WIDTH - 1 downto 0) 
-											is addr(AINDEX_WIDTH - 1 downto 0);
+   
+	alias aTeg			: std_logic_vector(ATEG_WIDTH - 1 downto 0)
+													is addr(ATEG_WIDTH + AINDEX_WIDTH - 1 downto AINDEX_WIDTH);
+	alias aIndex		: std_logic_vector(AINDEX_WIDTH - 1 downto 0)
+													is addr(AINDEX_WIDTH - 1 downto 0);
 
 	type tegMem_t is array (natural range <>) of std_logic_vector (MEM_WIDTH - 1 downto 0);
 	signal tegMem 		: tegMem_t (MEM_SIZE - 1 downto 0) := (others => (others => 'U'));
@@ -85,3 +104,4 @@ begin
 	hitBuf	<= '1' when moTeg = aTeg and moVal = '1' else '0';
 	hit 	<= hitBuf;	
 end tegMemChannel_arch;
+
